@@ -1,6 +1,34 @@
 import { Row, Col, Typography, Input, Radio, Select, Tag } from 'antd'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import {
+    changePrioritiesFilter,
+    changeSearchFilter,
+    changeStatusFilter,
+} from '../../redux/action'
 
 export default function Filters() {
+    const dispatch = useDispatch()
+
+    const [searchText, setSearchText] = useState('')
+    const [statusFilter, setStatusFilter] = useState('All')
+    const [prioritiesFilter, setPrioritiesFilter] = useState([])
+
+    const handleSearchTextChange = (e) => {
+        setSearchText(e.target.value)
+        dispatch(changeSearchFilter(e.target.value))
+    }
+
+    const handleStatusFilterChange = (e) => {
+        setStatusFilter(e.target.value)
+        dispatch(changeStatusFilter(e.target.value))
+    }
+
+    const handlePrioritiesChange = (value) => {
+        setPrioritiesFilter(value)
+        dispatch(changePrioritiesFilter(value))
+    }
+
     return (
         <Row justify="center">
             <Col span={24}>
@@ -13,7 +41,11 @@ export default function Filters() {
                 >
                     Search
                 </Typography.Paragraph>
-                <Input.Search placeholder="input search text" />
+                <Input.Search
+                    placeholder="input search text"
+                    value={searchText}
+                    onChange={handleSearchTextChange}
+                />
             </Col>
             <Col sm={24}>
                 <Typography.Paragraph
@@ -25,7 +57,10 @@ export default function Filters() {
                 >
                     Filter By Status
                 </Typography.Paragraph>
-                <Radio.Group>
+                <Radio.Group
+                    value={statusFilter}
+                    onChange={handleStatusFilterChange}
+                >
                     <Radio value="All">All</Radio>
                     <Radio value="Completed">Completed</Radio>
                     <Radio value="Todo">To do</Radio>
@@ -46,6 +81,8 @@ export default function Filters() {
                     allowClear
                     placeholder="Please select"
                     style={{ width: '100%' }}
+                    value={prioritiesFilter}
+                    onChange={handlePrioritiesChange}
                 >
                     <Select.Option value="High" label="High">
                         <Tag color="red">High</Tag>
